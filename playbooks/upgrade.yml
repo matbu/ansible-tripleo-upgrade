@@ -1,0 +1,44 @@
+---
+- name: build inventory
+  hosts: localhost
+  roles:
+    - build-inventory
+
+# Configure yum repo
+- name:  Configure yum repo
+  hosts: overcloud
+  gather_facts: no
+  roles:
+    - { role: tripleo-repo,
+        upgrade_version: "newton",
+        delorean_hash: "current"}
+
+# Upgrade services by services
+- name:  Upgrade keystones
+  hosts: overcloud
+  gather_facts: no
+  roles:
+    - { role: tripleo-upgrade,
+        component: keystone,
+        package_names: openstack-keystone,
+        services: ["keystone"]}
+
+- name:  Upgrade glance
+  hosts: overcloud
+  gather_facts: no
+  roles:
+    - { role: tripleo-upgrade,
+        component: glance,
+        package_names: openstack-glance,
+        db_sync_w_script: false ,
+        db_sync_cmd: "glance-manage --config-file=/etc/glance/glance-registry.conf db_sync",
+        services: ["glance-api", "glance-registry"]}
+
+- name:  Upgrade neutron
+  hosts: overcloud
+  gather_facts: no
+  roles:
+    - { role: tripleo-upgrade,
+        component: neutron,
+        package_names: openstack-neutron,
+        services: ["neutron-server"]}

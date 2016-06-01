@@ -1,0 +1,14 @@
+- name: Ensure local working dir exists
+  delegate_to: localhost
+  file:
+    path: "{{ localdir }}"
+    state: directory
+
+# Generate an ansible inventory file from our in-memory inventory.
+# This permits someone to run ad-hoc ansible commands or playbooks
+# against the hosts we create with `add_hosts` elsewhere in this
+# project.
+- name: rebuild-inventory
+  template:
+    dest: "{{ localdir }}/hosts"
+    src: inventory.j2

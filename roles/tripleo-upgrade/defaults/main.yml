@@ -1,0 +1,10 @@
+---
+# defaults file for tripleo-upgrade
+services: ""
+package_names: ""
+component: ""
+db_sync_cmd: ""
+# Sync service database
+db_sync: true
+db_sync_w_script: true
+

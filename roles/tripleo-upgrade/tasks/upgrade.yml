@@ -1,0 +1,25 @@
+- name: update packages
+  yum:
+    name: ""{{ item }}"
+    state: latest
+  with_items: "{{ package_names }}"
+
+# One way to do the db sync, another way would be to just pass as parameter
+# the db_sync command see L#21
+- name: add service upgrade script
+  when: db_sync and db_sync_w_script
+  template:
+    src: "db_sync.sh.j2"
+    dest: "{{ component }}-db-sync.sh"
+    mode: 0744
+
+- name: run services DB sync
+  when: db_sync and db_sync_w_script
+  shell: "./{{ component }}-db-sync.sh"
+  run_once: true
+
+# Second way for doing the db_sync:
+- name: run service DB sync
+  when: db_sync and not db_sync_w_script
+  shell: "{{ db_sync_cmd }}"
+  run_once: true

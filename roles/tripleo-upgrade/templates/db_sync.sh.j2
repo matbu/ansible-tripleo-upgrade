@@ -1,0 +1,10 @@
+#!/bin/bash
+{% if component == glance %}
+    glance-manage --config-file=/etc/glance/glance-registry.conf db_sync
+{% endif %}
+{% if component == keystone %}
+    keystone-manage db_sync
+{% endif %}
+{% if component == neutron %}
+    neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugin.ini upgrade head
+{% endif %}

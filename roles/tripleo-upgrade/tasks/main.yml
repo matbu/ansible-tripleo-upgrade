@@ -1,0 +1,15 @@
+---
+- include: stop.yml
+  when: stop_services
+  tags:
+    - stop-services
+
+- include: upgrade.yml
+  when: upgrade-services
+  tags:
+    - upgrade-services
+
+- include: start.yml
+  when: start_services
+  tags:
+    - start-services
